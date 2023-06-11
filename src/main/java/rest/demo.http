@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/info
+GET http://localhost:8080/examen_test_war_exploded/api/info
 
 ###
 POST http://localhost:8080/api/login
