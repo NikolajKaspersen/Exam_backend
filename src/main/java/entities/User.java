@@ -30,11 +30,21 @@ public class User implements Serializable {
   @Size(min = 1, max = 255)
   @Column(name = "user_pass")
   private String userPass;
+  private String phone;
+  private String email;
+    private String status;
   @JoinTable(name = "user_roles", joinColumns = {
     @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
     @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
+
   @ManyToMany
   private List<Role> roleList = new ArrayList<>();
+
+  @ManyToMany
+  @JoinTable(name = "user_show",
+          joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "user_name"),
+          inverseJoinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"))
+    private List<Show> shows = new ArrayList<>();
 
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {
@@ -87,5 +97,29 @@ public class User implements Serializable {
   public void addRole(Role userRole) {
     roleList.add(userRole);
   }
+  public Festival getFestival() {
+        return festival;
+    }
+
+    public void setFestival(Festival festival) {
+        this.festival = festival;
+    }
+
+    public void addShow(Show show){
+        shows.add(show);
+        show.get().add(this);
+    }
+
+    public void removeShow(Show show){
+        shows.remove(show);
+        show.getGuests().remove(this);
+    }
+
+
+
+
+
+
+
 
 }

@@ -1,10 +1,11 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "shows")
-public class Shows {
+@Table(name = "show")
+public class Show {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -15,10 +16,14 @@ public class Shows {
     private String startDate;
     private String startTime;
 
-    public Shows() {
+    @ManyToMany(mappedBy = "shows", fetch = FetchType.EAGER)
+    private List<User> guests;
+
+
+    public Show() {
     }
 
-    public Shows(String name, String duration, String location, String startDate, String startTime) {
+    public Show(String name, String duration, String location, String startDate, String startTime) {
         this.name = name;
         this.duration = duration;
         this.location = location;
@@ -72,5 +77,13 @@ public class Shows {
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    public List<Guest> getGuests() {
+        return guests;
+    }
+
+    public void setGuests(List<Guest> guests) {
+        this.guests = guests;
     }
 }

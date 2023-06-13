@@ -1,6 +1,7 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "festival")
@@ -13,6 +14,9 @@ public class Festival {
     private String city;
     private String startDate;
     private String duration;
+
+    @OneToMany(mappedBy = "festival", cascade = CascadeType.ALL)
+    private List<User> guests;
 
     public Festival() {
     }
@@ -63,4 +67,17 @@ public class Festival {
     public void setDuration(String duration) {
         this.duration = duration;
     }
+
+    // Metode til at tilføje en Guest til listen af guests
+    public void addGuest(Guest guest) {
+        guests.add(guest);
+        guest.setFestival(this);
+    }
+
+    // Metode til at fjerne en Guest fra listen af guests
+    public void removeGuest(Guest guest) {
+        guests.remove(guest);
+        guest.setFestival(null);
+    }
+
 }
