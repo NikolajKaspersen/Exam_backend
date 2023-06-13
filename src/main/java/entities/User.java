@@ -27,7 +27,8 @@ public class User implements Serializable {
   private String name;
   private String phone;
   private String email;
-  private String status;
+  private Status status;
+  public enum Status {WIP, DONE, CANCELLED}
 
   @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(name = "user_show", joinColumns = {
@@ -67,7 +68,7 @@ public class User implements Serializable {
     return BCrypt.checkpw(pw, userPass);
     }
 
-  public User(String userName, String userPass, String name, String phone, String email, String status) {
+  public User(String userName, String userPass, String name, String phone, String email, Status status) {
     this.userName = userName;
     this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
     this.name = name;
@@ -118,11 +119,11 @@ public class User implements Serializable {
     this.email = email;
   }
 
-  public String getStatus() {
+  public Status getStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(Status status) {
     this.status = status;
   }
 
