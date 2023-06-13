@@ -1,11 +1,14 @@
 package entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "show")
-public class Show {
+@Table(name = "concert")
+public class Concert implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -16,14 +19,17 @@ public class Show {
     private String startDate;
     private String startTime;
 
-    @ManyToMany(mappedBy = "shows", fetch = FetchType.EAGER)
-    private List<User> guests;
 
 
-    public Show() {
+    @ManyToMany(mappedBy = "concerts", cascade = CascadeType.PERSIST)
+    private List<User> users = new ArrayList<>();
+
+
+
+    public Concert() {
     }
 
-    public Show(String name, String duration, String location, String startDate, String startTime) {
+    public Concert(String name, String duration, String location, String startDate, String startTime) {
         this.name = name;
         this.duration = duration;
         this.location = location;
@@ -79,11 +85,31 @@ public class Show {
         this.startTime = startTime;
     }
 
-    public List<Guest> getGuests() {
-        return guests;
+    public List<User> getGuests() {
+        return users;
     }
 
-    public void setGuests(List<Guest> guests) {
-        this.guests = guests;
+    public void setGuests(List<User> Guests) {
+        this.users = Guests;
+    }
+
+    public void addGuest(User user){
+        this.users.add(user);
+
+    }
+
+
+//    public Festival getFestivals(){
+//        return festival;
+//    }
+//
+//    public void setFestival(Festival festival){
+//        this.festival = festival;
+//    }
+    public List<User> getUsers(){
+        return users;
+    }
+    public void setUsers(List<User> users){
+        this.users = users;
     }
 }

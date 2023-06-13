@@ -1,11 +1,14 @@
 package entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "festival")
-public class Festival {
+public class Festival  implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -21,11 +24,12 @@ public class Festival {
     public Festival() {
     }
 
-    public Festival(String name, String city, String startDate, String duration) {
+    public Festival(String name, String city, String startDate, String duration, List<User> guests) {
         this.name = name;
         this.city = city;
         this.startDate = startDate;
         this.duration = duration;
+        this.guests = guests;
     }
 
     public Long getId() {
@@ -69,13 +73,13 @@ public class Festival {
     }
 
     // Metode til at tilføje en Guest til listen af guests
-    public void addGuest(Guest guest) {
+    public void addUser(User guest) {
         guests.add(guest);
         guest.setFestival(this);
     }
 
     // Metode til at fjerne en Guest fra listen af guests
-    public void removeGuest(Guest guest) {
+    public void removeUser(User guest) {
         guests.remove(guest);
         guest.setFestival(null);
     }

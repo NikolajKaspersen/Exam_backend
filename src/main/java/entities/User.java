@@ -3,16 +3,10 @@ package entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
@@ -30,21 +24,28 @@ public class User implements Serializable {
   @Size(min = 1, max = 255)
   @Column(name = "user_pass")
   private String userPass;
+  private String name;
   private String phone;
   private String email;
-    private String status;
+  private String status;
+
+  @ManyToMany(cascade = CascadeType.PERSIST)
+  @JoinTable(name = "user_show", joinColumns = {
+          @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
+          @JoinColumn(name = "show_id", referencedColumnName = "id")})
+  private List<Concert> concerts;
+
+  @ManyToOne(cascade = CascadeType.PERSIST)
+    private Festival festival;
+
   @JoinTable(name = "user_roles", joinColumns = {
     @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
     @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
-
-  @ManyToMany
+  @ManyToMany(cascade = CascadeType.PERSIST)
   private List<Role> roleList = new ArrayList<>();
 
-  @ManyToMany
-  @JoinTable(name = "user_show",
-          joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "user_name"),
-          inverseJoinColumns = @JoinColumn(name = "show_id", referencedColumnName = "id"))
-    private List<Show> shows = new ArrayList<>();
+
+
 
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {
@@ -57,16 +58,23 @@ public class User implements Serializable {
     return rolesAsStrings;
   }
 
-  public User() {}
+  public User() {
+
+  }
 
   //TODO Change when password is hashed
    public boolean verifyPassword(String pw){
     return BCrypt.checkpw(pw, userPass);
     }
 
-  public User(String userName, String userPass) {
+  public User(String userName, String userPass, String name, String phone, String email, String status) {
     this.userName = userName;
     this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
+    this.name = name;
+    this.phone = phone;
+    this.email = email;
+    this.status = status;
+    this.concerts = new ArrayList<>();
   }
 
 
@@ -86,6 +94,52 @@ public class User implements Serializable {
     this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());;
   }
 
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public List<Concert> getShows() {
+    return this.concerts;
+  }
+
+  public void setShows(List<Concert> concerts) {
+    this.concerts = concerts;
+  }
+
+  public void addShow(Concert concert){
+    if (concert != null) {
+      this.concerts.add(concert);
+    }
+  }
+
   public List<Role> getRoleList() {
     return roleList;
   }
@@ -97,29 +151,31 @@ public class User implements Serializable {
   public void addRole(Role userRole) {
     roleList.add(userRole);
   }
+
   public Festival getFestival() {
-        return festival;
-    }
+    return festival;
+  }
 
-    public void setFestival(Festival festival) {
-        this.festival = festival;
-    }
+  public void setFestival(Festival festival) {
+    this.festival = festival;
+  }
 
-    public void addShow(Show show){
-        shows.add(show);
-        show.get().add(this);
-    }
-
-    public void removeShow(Show show){
-        shows.remove(show);
-        show.getGuests().remove(this);
-    }
+//  public void addFestival(Festival festival) {
+//    setFestival().add(festival);
+//    this.festival = festival;
+//  }
 
 
-
-
-
-
-
-
+  @Override
+  public String toString() {
+    return "User{" +
+            "userName='" + userName + '\'' +
+            ", userPass='" + userPass + '\'' +
+            ", name='" + name + '\'' +
+            ", phone='" + phone + '\'' +
+            ", email='" + email + '\'' +
+            ", status='" + status + '\'' +
+            ", shows=" + concerts +
+            '}';
+  }
 }
