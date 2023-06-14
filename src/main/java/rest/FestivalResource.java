@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
+
 import facades.FestivalFacade;
 import dtos.FestivalDto;
 import utils.EMF_Creator;
@@ -17,6 +17,14 @@ public class FestivalResource {
 
     private final FestivalFacade festivalFacade = FestivalFacade.getFestivalFacade(EMF);
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+    @Context
+    private UriInfo context;
+
+    @Context
+    SecurityContext securityContext;
+
+
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -38,6 +46,7 @@ public class FestivalResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
 
     @DELETE
     @Path("/{id}")

@@ -3,6 +3,8 @@ package dtos;
 import entities.Concert;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -23,6 +25,12 @@ public class ConcertDto implements Serializable {
         this.location = concert.getLocation();
         this.startDate = concert.getStartDate();
         this.startTime = concert.getStartTime();
+    }
+
+    public static List<ConcertDto> getDtos(List<Concert> concerts){
+        List<ConcertDto> concertDtos = new ArrayList<>();
+        concerts.forEach(concert->concertDtos.add(new ConcertDto(concert)));
+        return concertDtos;
     }
 
     public Long getId() {

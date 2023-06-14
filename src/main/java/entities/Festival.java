@@ -6,6 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "festival")
+@NamedQuery(name = "Festival.deleteAllRows", query = "DELETE from Festival")
 public class Festival  implements Serializable {
 
     private static final long serialVersionUID = 1L;

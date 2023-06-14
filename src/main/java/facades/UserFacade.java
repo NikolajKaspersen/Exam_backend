@@ -1,10 +1,15 @@
 package facades;
 
+import dtos.UserDto;
 import entities.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 
 import security.errorhandling.AuthenticationException;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class UserFacade {
 
@@ -37,16 +42,29 @@ public class UserFacade {
         }
     }
 
-    public User createUser(User user){
+    public List<UserDto> getListUserDto(){
+        EntityManager em = emf.createEntityManager();
+        List<User> users;
+        try{
+            TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
+            users = query.getResultList();
+            return UserDto.getDtos(users);
+        }finally{
+            em.close();
+        }
+    }
+
+    public UserDto createUser(UserDto userdto){
+        User user = new User(userdto.getUserName(), userdto.getUserPass(), userdto.getName(), userdto.getPhone(), userdto.getEmail(), User.Status.WIP);
         EntityManager em = emf.createEntityManager();
         try{
             em.getTransaction().begin();
             em.persist(user);
             em.getTransaction().commit();
-            return user;
         }finally{
             em.close();
         }
+        return new UserDto(user);
     }
 
     public User getVerifiedUser(String username, String password) throws AuthenticationException {

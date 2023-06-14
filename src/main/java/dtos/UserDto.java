@@ -5,7 +5,9 @@ import entities.User;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * DTO for {@link entities.User}
@@ -29,6 +31,12 @@ public class UserDto implements Serializable {
         this.phone = user.getPhone();
         this.email = user.getEmail();
         this.status = String.valueOf(user.getStatus());
+    }
+
+    public static List<UserDto> getDtos(List<User> users){
+        return users.stream()
+                .map(UserDto::new)
+                .collect(Collectors.toList());
     }
 
     public String getUserName() {

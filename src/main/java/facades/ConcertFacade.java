@@ -5,7 +5,9 @@ import entities.Concert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConcertFacade {
 
@@ -21,6 +23,18 @@ public class ConcertFacade {
             instance = new ConcertFacade();
         }
         return instance;
+    }
+
+    public List<ConcertDto> getAll(){
+        EntityManager em = emf.createEntityManager();
+        List<Concert> concerts;
+        try{
+            TypedQuery<Concert> query = em.createQuery("SELECT c FROM Concert c", Concert.class);
+            concerts = query.getResultList();
+        }finally{
+            em.close();
+        }
+        return ConcertDto.getDtos(concerts);
     }
 
     private EntityManager getEntityManager() {
