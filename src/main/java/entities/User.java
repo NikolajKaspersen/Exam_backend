@@ -3,20 +3,14 @@ package entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.mindrot.jbcrypt.BCrypt;
 
 @Entity
 @Table(name = "users")
+@NamedQuery(name = "User.deleteAllRows", query = "DELETE from User")
 public class User implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -35,6 +29,9 @@ public class User implements Serializable {
     @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
   @ManyToMany
   private List<Role> roleList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+  private List<Car> cars;
 
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {
@@ -57,6 +54,7 @@ public class User implements Serializable {
   public User(String userName, String userPass) {
     this.userName = userName;
     this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
+    this.cars = new ArrayList<>();
   }
 
 
@@ -88,4 +86,26 @@ public class User implements Serializable {
     roleList.add(userRole);
   }
 
+    public void addCar(Car car) {
+      cars.add(car);
+      car.setUser(this);
+    }
+
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
+    }
+
+  @Override
+  public String toString() {
+    return "User{" +
+            "userName='" + userName + '\'' +
+            ", userPass='" + userPass + '\'' +
+            ", roleList=" + roleList +
+            ", cars=" + cars +
+            '}';
+  }
 }

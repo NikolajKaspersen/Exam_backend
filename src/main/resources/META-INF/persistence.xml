@@ -5,6 +5,9 @@
     <persistence-unit name="pu" transaction-type="RESOURCE_LOCAL">
         <class>entities.User</class>
         <class>entities.Role</class>
+        <class>entities.Car</class>
+        <class>entities.Booking</class>
+        <class>entities.Washing_assistant</class>
         <!--    <class>entities.RenameMe</class>-->
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
