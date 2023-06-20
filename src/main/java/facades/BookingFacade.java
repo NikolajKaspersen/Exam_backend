@@ -58,7 +58,7 @@ public class BookingFacade {
 
     }
 
-    public BookingDto deleteById(long id) {
+    public BookingDto deleteBookingById(long id) {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
