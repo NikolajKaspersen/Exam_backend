@@ -1,27 +1,37 @@
 package dtos;
 
+import entities.Car;
+import entities.User;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * DTO for {@link entities.Car}
  */
-public class CarDTO implements Serializable {
+public class CarDto implements Serializable {
     private final Long id;
     private final int registration_number;
     private final String brand;
     private final String make;
     private final String year;
-    private final List<BookingDTO> bookings;
 
-    public CarDTO(Long id, int registration_number, String brand, String make, String year, List<BookingDTO> bookings) {
-        this.id = id;
-        this.registration_number = registration_number;
-        this.brand = brand;
-        this.make = make;
-        this.year = year;
-        this.bookings = bookings;
+    private final List<BookingDto> bookings;
+
+    public CarDto(Car car) {
+        this.id = car.getId();
+        this.registration_number = car.getRegistration_number();
+        this.brand = car.getBrand();
+        this.make = car.getMake();
+        this.year = car.getYear();
+        this.bookings = new ArrayList<>();
+    }
+
+    public static List<CarDto> getDtos(List<Car> cars){
+        return cars.stream().map(c -> new CarDto(c)).collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -44,26 +54,21 @@ public class CarDTO implements Serializable {
         return year;
     }
 
-    public List<BookingDTO> getBookings() {
-        return bookings;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CarDTO entity = (CarDTO) o;
+        CarDto entity = (CarDto) o;
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.registration_number, entity.registration_number) &&
                 Objects.equals(this.brand, entity.brand) &&
                 Objects.equals(this.make, entity.make) &&
-                Objects.equals(this.year, entity.year) &&
-                Objects.equals(this.bookings, entity.bookings);
+                Objects.equals(this.year, entity.year);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, registration_number, brand, make, year, bookings);
+        return Objects.hash(id, registration_number, brand, make, year);
     }
 
     @Override
@@ -73,7 +78,6 @@ public class CarDTO implements Serializable {
                 "registration_number = " + registration_number + ", " +
                 "brand = " + brand + ", " +
                 "make = " + make + ", " +
-                "year = " + year + ", " +
-                "bookings = " + bookings + ")";
+                "year = " + year + ")";
     }
 }

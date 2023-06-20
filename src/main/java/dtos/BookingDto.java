@@ -1,23 +1,38 @@
 package dtos;
 
+import entities.Booking;
+import entities.Car;
+import entities.Washing_assistant;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * DTO for {@link entities.Booking}
  */
-public class BookingDTO implements Serializable {
+public class BookingDto implements Serializable {
     private final Long id;
     private final String date_and_time;
     private final String duration;
-    private final List<Washing_assistantDTO> washingAssistantsList;
+    private final CarDto car;
+    private final List<Washing_assistantDto> washingAssistants;
 
-    public BookingDTO(Long id, String date_and_time, String duration, List<Washing_assistantDTO> washingAssistantsList) {
-        this.id = id;
-        this.date_and_time = date_and_time;
-        this.duration = duration;
-        this.washingAssistantsList = washingAssistantsList;
+
+
+
+    public BookingDto(Booking booking) {
+        this.id = booking.getId();
+        this.date_and_time = booking.getDate_and_time();
+        this.duration = booking.getDuration();
+        this.car = new CarDto(booking.getCar());
+        this.washingAssistants = new ArrayList<>();
+    }
+
+    public static List<BookingDto> getDtos(List<Booking> bookings){
+        return bookings.stream().map(b -> new BookingDto(b)).collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -32,24 +47,19 @@ public class BookingDTO implements Serializable {
         return duration;
     }
 
-    public List<Washing_assistantDTO> getWashingAssistantsList() {
-        return washingAssistantsList;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BookingDTO entity = (BookingDTO) o;
+        BookingDto entity = (BookingDto) o;
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.date_and_time, entity.date_and_time) &&
-                Objects.equals(this.duration, entity.duration) &&
-                Objects.equals(this.washingAssistantsList, entity.washingAssistantsList);
+                Objects.equals(this.duration, entity.duration);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date_and_time, duration, washingAssistantsList);
+        return Objects.hash(id, date_and_time, duration);
     }
 
     @Override
@@ -57,7 +67,6 @@ public class BookingDTO implements Serializable {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
                 "date_and_time = " + date_and_time + ", " +
-                "duration = " + duration + ", " +
-                "washingAssistantsList = " + washingAssistantsList + ")";
+                "duration = " + duration + ")";
     }
 }

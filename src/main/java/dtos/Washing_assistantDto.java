@@ -1,24 +1,35 @@
 package dtos;
 
+import entities.Washing_assistant;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * DTO for {@link entities.Washing_assistant}
  */
-public class Washing_assistantDTO implements Serializable {
+public class Washing_assistantDto implements Serializable {
     private final Long id;
     private final String name;
     private final String primary_language;
     private final String years_of_experience;
     private final int price_per_hour;
+    private final List<BookingDto> bookingsList;
 
-    public Washing_assistantDTO(Long id, String name, String primary_language, String years_of_experience, int price_per_hour) {
-        this.id = id;
-        this.name = name;
-        this.primary_language = primary_language;
-        this.years_of_experience = years_of_experience;
-        this.price_per_hour = price_per_hour;
+    public Washing_assistantDto(Washing_assistant washingAssistant) {
+        this.id = washingAssistant.getId();
+        this.name = washingAssistant.getName();
+        this.primary_language = washingAssistant.getPrimary_language();
+        this.years_of_experience = washingAssistant.getYears_of_experience();
+        this.price_per_hour = washingAssistant.getPrice_per_hour();
+        this.bookingsList = new ArrayList<>();
+    }
+
+    public static List<Washing_assistantDto> getDtos(List<Washing_assistant> washingAssistants){
+        return washingAssistants.stream().map(w -> new Washing_assistantDto(w)).collect(Collectors.toList());
     }
 
     public Long getId() {
@@ -45,7 +56,7 @@ public class Washing_assistantDTO implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Washing_assistantDTO entity = (Washing_assistantDTO) o;
+        Washing_assistantDto entity = (Washing_assistantDto) o;
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.name, entity.name) &&
                 Objects.equals(this.primary_language, entity.primary_language) &&
